@@ -17,4 +17,20 @@ model User {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  // Relationship
+  posts        Post[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  image     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Foreign Key
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

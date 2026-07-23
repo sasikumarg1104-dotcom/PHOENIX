@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import routes from "./routes";
+import { errorMiddleware } from "./middleware/error.middleware";
 
 const app = express();
 
@@ -25,5 +26,8 @@ app.use("/api/v1", routes);
 app.get("/test", (_req, res) => {
   res.send("Test route working");
 });
+
+// Global Error Handler (Must be the last middleware)
+app.use(errorMiddleware);
 
 export default app;

@@ -4,6 +4,7 @@ import { UpdateProfileInput } from "../validators/updateProfile.validator";
 
 import { hashPassword, comparePassword } from "../utils/hash";
 import { generateToken } from "../utils/jwt";
+import { AppError } from "../utils/AppError";
 
 import {
   findUserByEmail,
@@ -19,7 +20,7 @@ export const registerUser = async (data: RegisterInput) => {
   const existingUser = await findUserByEmail(data.email);
 
   if (existingUser) {
-    throw new Error("Email already exists");
+    throw new AppError("Email already exists", 409);
   }
 
   const hashedPassword = await hashPassword(data.password);
@@ -45,7 +46,7 @@ export const loginUser = async (data: LoginInput) => {
   const user = await findUserByEmail(data.email);
 
   if (!user) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const isPasswordValid = await comparePassword(
@@ -54,7 +55,7 @@ export const loginUser = async (data: LoginInput) => {
   );
 
   if (!isPasswordValid) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", 401);
   }
 
   const accessToken = generateToken(user.id);
@@ -76,7 +77,7 @@ export const getProfile = async (userId: string) => {
   const user = await findUserById(userId);
 
   if (!user) {
-    throw new Error("User not found");
+    throw new AppError("User not found", 404);
   }
 
   return user;
@@ -92,7 +93,7 @@ export const updateProfile = async (
   const existingUser = await findUserById(userId);
 
   if (!existingUser) {
-    throw new Error("User not found");
+    throw new AppError("User not found", 404);
   }
 
   const updatedUser = await updateUser(userId, data);

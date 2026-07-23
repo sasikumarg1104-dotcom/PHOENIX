@@ -5,6 +5,8 @@ import { loginSchema } from "../validators/login.validator";
 
 import { AuthRequest } from "../middleware/auth.middleware";
 import { asyncHandler } from "../middleware/asyncHandler";
+import { sendResponse } from "../utils/response";
+
 
 import {
   registerUser,
@@ -22,11 +24,12 @@ export const register = asyncHandler(
 
     const user = await registerUser(data);
 
-    return res.status(201).json({
-      success: true,
-      message: "User registered successfully",
-      data: user,
-    });
+    return sendResponse(
+  res,
+  201,
+  "User registered successfully",
+  user
+);
   }
 );
 
@@ -39,11 +42,12 @@ export const login = asyncHandler(
 
     const result = await loginUser(data);
 
-    return res.status(200).json({
-      success: true,
-      message: "Login successful",
-      data: result,
-    });
+   return sendResponse(
+  res,
+  200,
+  "Login successful",
+  result
+);
   }
 );
 
@@ -54,10 +58,12 @@ export const profile = asyncHandler(
   async (req: AuthRequest, res: Response) => {
     const user = await getProfile(req.user!.id);
 
-    return res.status(200).json({
-      success: true,
-      data: user,
-    });
+    return sendResponse(
+  res,
+  200,
+  "Profile fetched successfully",
+  user
+);
   }
 );
 
@@ -71,10 +77,12 @@ export const updateProfileController = asyncHandler(
       req.body
     );
 
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      data: updatedUser,
-    });
+    return sendResponse(
+  res,
+  200,
+  "Profile updated successfully",
+  updatedUser
+);
   }
 );
+
