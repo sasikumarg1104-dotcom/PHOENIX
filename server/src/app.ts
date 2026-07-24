@@ -7,6 +7,7 @@ import routes from "./routes";
 import authRoutes from "./routes/auth.routes";
 import postRoutes from "./routes/post.routes";
 import likeRoutes from "./routes/like.routes";
+import commentRoutes from "./routes/comment.routes";
 
 import { errorMiddleware } from "./middleware/error.middleware";
 
@@ -31,6 +32,7 @@ app.get("/", (_req: Request, res: Response) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/posts", likeRoutes);
+app.use("/api", commentRoutes);
 app.use("/api/v1", routes);
 
 app.get("/test", (_req, res) => {
