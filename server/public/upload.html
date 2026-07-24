@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Phoenix Upload Test</title>
+</head>
+<body>
+
+    <h2>Upload Image</h2>
+
+    <input type="file" id="image">
+
+    <br><br>
+
+    <button onclick="upload()">Upload</button>
+
+    <pre id="result"></pre>
+
+<script>
+
+async function upload() {
+
+    const file = document.getElementById("image").files[0];
+
+    if (!file) {
+        alert("Choose an image");
+        return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("image", file);
+
+    const response = await fetch("http://localhost:5000/api/upload", {
+
+        method: "POST",
+
+        headers: {
+            Authorization:
+                "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcng2azNqMzAwMDBmaWJnaWN3bmVkcXAiLCJpYXQiOjE3ODQ3OTIzOTMsImV4cCI6MTc4NTM5NzE5M30.QfLiXIBZlykodWNKyFLemJsAAcfvm9UH77YqKNSMZDo"
+        },
+
+        body: formData
+
+    });
+
+    const data = await response.json();
+
+    document.getElementById("result").textContent =
+        JSON.stringify(data, null, 2);
+}
+
+</script>
+
+</body>
+</html>

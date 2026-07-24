@@ -1,0 +1,26 @@
+opencollection: 1.0.0
+
+info:
+  name: phoenix_
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImNtcng2azNqMzAwMDBmaWJnaWN3bmVkcXAiLCJpYXQiOjE3ODQ3OTIzOTMsImV4cCI6MTc4NTM5NzE5M30.QfLiXIBZlykodWNKyFLemJsAAcfvm9UH77YqKNSMZDo
+bundled: false
+extensions:
+  bruno:
+    ignore:
+      - node_modules
+      - .git

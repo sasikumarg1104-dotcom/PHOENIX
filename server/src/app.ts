@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
+import path from "path";
 import helmet from "helmet";
 import morgan from "morgan";
 
@@ -11,6 +12,8 @@ import commentRoutes from "./routes/comment.routes";
 import followRoutes from "./routes/follow.routes";
 import feedRoutes from "./routes/feed.routes";
 import userRoutes from "./routes/user.routes";
+import searchRoutes from "./routes/search.routes";
+import uploadRoutes from "./routes/upload.routes";
 
 import { errorMiddleware } from "./middleware/error.middleware";
 
@@ -18,7 +21,11 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -38,8 +45,11 @@ app.use("/api/posts", likeRoutes);
 app.use("/api", commentRoutes);
 app.use("/api", followRoutes);
 app.use("/api/v1", routes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/search", searchRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api", feedRoutes);
+app.use(express.static(path.join(__dirname, "../public")));
 app.get("/test", (_req, res) => {
   res.send("Test route working");
 });
