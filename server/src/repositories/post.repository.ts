@@ -1,8 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-// Prisma client may not have generated model typings in some environments;
-// cast to any to avoid TS property errors while runtime client is used.
-const prisma = new PrismaClient() as any;
+import prisma from "../config/prisma";
 
 export const createPost = (
   userId: string,
