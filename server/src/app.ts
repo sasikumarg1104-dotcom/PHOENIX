@@ -13,6 +13,10 @@ import followRoutes from "./routes/follow.routes";
 import feedRoutes from "./routes/feed.routes";
 import userRoutes from "./routes/user.routes";
 import searchRoutes from "./routes/search.routes";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger";
+import dashboardRoutes from "./routes/dashboard.routes";
+import habitRoutes from "./routes/habit.routes";
 import uploadRoutes from "./routes/upload.routes";
 
 import { errorMiddleware } from "./middleware/error.middleware";
@@ -38,6 +42,13 @@ app.get("/", (_req: Request, res: Response) => {
   });
 });
 
+//swagger
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec)
+);
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
@@ -47,6 +58,8 @@ app.use("/api", followRoutes);
 app.use("/api/v1", routes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/search", searchRoutes);
+app.use("/api/habits", habitRoutes);
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api", feedRoutes);
 app.use(express.static(path.join(__dirname, "../public")));

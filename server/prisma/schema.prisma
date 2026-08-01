@@ -18,13 +18,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relationship
   posts    Post[]
   likes    Like[]
   comments Comment[]
+  habits   Habit[]
 
   followers Follow[] @relation("UserFollowers")
   following Follow[] @relation("UserFollowing")
+
+  @@index([email])
 }
 
 model Post {
@@ -35,11 +37,14 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Foreign Key
-  userId   String
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   likes    Like[]
   comments Comment[]
+
+  @@index([userId])
+  @@index([createdAt])
 }
 
 model Like {
@@ -54,6 +59,8 @@ model Like {
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])
+  @@index([userId])
+  @@index([postId])
 }
 
 model Comment {
@@ -69,6 +76,9 @@ model Comment {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Follow {
@@ -83,4 +93,76 @@ model Follow {
   createdAt DateTime @default(now())
 
   @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+enum HabitFrequency {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum HabitPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum HabitDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+model Habit {
+  id String @id @default(cuid())
+
+  title       String
+  description String?
+  category    String?
+
+  frequency  HabitFrequency  @default(DAILY)
+  priority   HabitPriority   @default(MEDIUM)
+  difficulty HabitDifficulty @default(MEDIUM)
+
+  targetDays Int @default(1)
+
+  streak     Int @default(0)
+  bestStreak Int @default(0)
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  completions HabitCompletion[]
+
+  @@index([userId])
+  @@index([isActive])
+  @@index([category])
+  @@index([streak])
+  @@index([bestStreak])
+  @@index([createdAt])
+}
+
+model HabitCompletion {
+  id String @id @default(cuid())
+
+  completedAt DateTime @default(now())
+
+  completionDate DateTime
+
+  notes String?
+
+  habitId String
+  habit   Habit  @relation(fields: [habitId], references: [id], onDelete: Cascade)
+
+  @@unique([habitId, completionDate])
+  @@index([habitId])
+  @@index([completionDate])
+  @@index([completedAt])
 }
